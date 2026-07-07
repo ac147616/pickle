@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+coverage/
+
+# Next.js
+.next/
+out/
+
+# Expo
+.expo/
+.expo-shared/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+*.log
+
+# Misc
+.turbo/
+
+# Claude Code local (machine-specific) settings
+.claude/settings.local.json
