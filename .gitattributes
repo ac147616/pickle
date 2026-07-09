@@ -1,0 +1,4 @@
+# Shell scripts run inside Linux containers (docker-entrypoint-initdb.d) -
+# CRLF line endings break the shebang/interpreter there, so force LF
+# regardless of the checkout platform's autocrlf setting.
+*.sh text eol=lf

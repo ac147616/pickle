@@ -1,0 +1,12 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/src/generated/prisma
+
+# Stray compiled output some editors emit alongside these root-level /
+# prisma-only .ts files (they're run directly via tsx/ts-node, never built)
+/prisma.config.js
+/prisma.config.js.map
+/prisma/seed.js
+/prisma/seed.js.map

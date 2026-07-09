@@ -115,7 +115,11 @@ exceptions(id, booking_id, raised_by, type, description, photo_paths jsonb, stat
   resolved_by, resolution)
 payments / payouts / refunds                        -- APPEND-ONLY, integer cents,
                                                     -- Stripe ids, idempotency keys
-ratings(id, booking_id, rater_user_id, ratee_org_id, stars, comment)
+ratings(id, booking_id, rater_user_id, ratee_org_id|ratee_user_id, stars, comment)
+                                                    -- exactly one of ratee_org_id /
+                                                    -- ratee_user_id set (individual
+                                                    -- shippers have no org); unique
+                                                    -- per (booking_id, rater_user_id)
 disputes(id, booking_id, opened_by, category, status, outcome, admin_notes)
 messages(id, booking_id, sender_user_id, body, sent_at)   -- chat scoped to booking
 
