@@ -29,12 +29,20 @@ Phased build plan: `docs/BUILD_PLAN.md`.
 
 1. **Money tables are append-only.** Never UPDATE or DELETE rows in payments, payouts,
    refunds. All NZD amounts are integer cents. Every payment mutation uses a Stripe
-   idempotency key. Verify Stripe webhook signatures.
+   idempotency key. Verify Stripe webhook signatures. This is enforced at the DB level,
+   not just by convention: the API connects as a restricted `pickle_app` role that has
+   UPDATE/DELETE revoked on payments/payouts/refunds/booking_events (see
+   `docker/postgres-init/01-app-role.sh`). Migrations run as a separate, more privileged
+   role (`prisma.config.ts`'s `DIRECT_URL`, vs. the app's `DATABASE_URL`) — table owners
+   and superusers bypass GRANT/REVOKE, so this split is what makes the REVOKE mean
+   anything. Preserve this role separation in every environment, including Cloud SQL in
+   prod (distinct migrator vs. runtime service accounts).
 2. **Booking status is a strict state machine** enforced server-side (see spec §5).
    Clients request transitions; the API validates actor, current state, and gate
    conditions (geofence, QR scan, POD) before applying. Never trust client-asserted state.
 3. **booking_events is immutable and append-only.** Every status change, scan, photo,
    exception, delay gets an event row with actor_user_id, occurred_at, GPS, metadata.
+   Same DB-level enforcement as payments/payouts/refunds above.
 4. **Progressive disclosure of PII** (spec §7). Contact details, exact addresses are
    NEVER in listing/search responses. Exact addresses only after booking is paid, only
    to the counterparty. Response DTOs are shaped per role + booking status. No endpoint
