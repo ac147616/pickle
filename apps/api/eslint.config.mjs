@@ -6,9 +6,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    // test/ (e2e specs) isn't wired into a TS project yet — that lands with the
-    // e2e test infra in BUILD_PLAN.md Phase 0.3/3.1.
-    ignores: ['eslint.config.mjs', 'test/**'],
+    ignores: ['eslint.config.mjs'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,

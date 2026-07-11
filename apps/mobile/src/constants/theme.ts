@@ -7,20 +7,21 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+// Pickle brand palette (CLAUDE.md): deep green #0E3524, cream #FAF7EC.
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: '#0E3524',
+    background: '#FAF7EC',
+    backgroundElement: '#F0EBDC',
+    backgroundSelected: '#E5DEC8',
+    textSecondary: '#5C6F63',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#FAF7EC',
+    background: '#081F16',
+    backgroundElement: '#14332A',
+    backgroundSelected: '#1B4635',
+    textSecondary: '#A9B9AE',
   },
 } as const;
 

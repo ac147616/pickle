@@ -26,3 +26,62 @@ jobs:
 
       - name: Test
         run: npm run test
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pickle
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d pickle"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://pickle_app:pickle_app_ci_password@localhost:5432/pickle
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/pickle
+      FIREBASE_AUTH_EMULATOR_HOST: localhost:9099
+      FIREBASE_PROJECT_ID: demo-pickle
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Same script docker-compose uses locally (docker/postgres-init) - the
+      # service container above has no init-script mount, so run it as a step
+      # instead. PGHOST/PGPASSWORD are standard libpq env vars psql reads
+      # automatically, so the script itself needs no CI-specific changes.
+      - name: Create restricted app role
+        env:
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: pickle
+          APP_DB_PASSWORD: pickle_app_ci_password
+        run: sh docker/postgres-init/01-app-role.sh
+
+      - name: Apply migrations
+        working-directory: apps/api
+        run: npx prisma migrate deploy
+
+      - name: Generate Prisma client
+        working-directory: apps/api
+        run: npx prisma generate
+
+      # firebase-tools (root devDependency) spins the Auth emulator up just
+      # for this step and tears it down after - typecheck/lint/unit-test
+      # above never need it.
+      - name: e2e tests
+        run: npm run test:e2e
