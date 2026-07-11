@@ -1,10 +1,14 @@
-import { z } from 'zod';
+export * from './common';
+export * from './enums';
 
-// Placeholder to prove cross-package TS resolution works end to end.
-// Real entity schemas (users, trips, shipments, bookings, ...) land in milestone 0.4
-// per docs/BUILD_PLAN.md.
-export const pickleMonorepoSchema = z.object({
-  scaffolded: z.literal(true),
-});
+export * from './entities/identity';
+export * from './entities/verification';
+export * from './entities/fleet';
+export * from './entities/shipments';
+export * from './entities/bookings';
+export * from './entities/pod';
+export * from './entities/payments';
+export * from './entities/ratings';
+export * from './entities/messaging';
 
-export type PickleMonorepo = z.infer<typeof pickleMonorepoSchema>;
+export * from './dto/me';

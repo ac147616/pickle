@@ -1,4 +1,4 @@
-import { pickleMonorepoSchema } from '@pickle/types';
+import { UserRoleSchema } from '@pickle/types';
 import TestRenderer from 'react-test-renderer';
 
 import { ThemedText } from '@/components/themed-text';
@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 // @pickle/types workspace package through the same Jest/TS config.
 describe('workspace wiring', () => {
   it('resolves @pickle/types', () => {
-    expect(pickleMonorepoSchema.parse({ scaffolded: true }).scaffolded).toBe(true);
+    expect(UserRoleSchema.parse('SHIPPER')).toBe('SHIPPER');
   });
 
   it('renders a themed component', async () => {

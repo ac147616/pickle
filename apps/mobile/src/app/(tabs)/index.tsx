@@ -1,3 +1,4 @@
+import { MeResponse } from '@pickle/types';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,14 +9,6 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 import { apiFetch } from '@/lib/api';
-
-interface MeResponse {
-  id: string;
-  email: string | null;
-  fullName: string;
-  role: string;
-  status: string;
-}
 
 export default function HomeScreen() {
   const theme = useTheme();

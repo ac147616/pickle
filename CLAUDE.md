@@ -72,6 +72,11 @@ Phased build plan: `docs/BUILD_PLAN.md`.
   calm tone. Driver screens optimise for big tap targets, one-handed use, sunlight.
 - When a product decision is ambiguous, ASK rather than invent. When a security decision
   is ambiguous, take the more conservative option and flag it.
+- `packages/types` holds entity schemas (mirroring the DB shape) and enums as the shared
+  source of truth. Don't pre-invent request/response DTOs for endpoints that don't exist
+  yet — each 1.x+ milestone defines its own DTOs in `packages/types` when it actually
+  builds that endpoint, shaped for what that endpoint needs (progressive disclosure,
+  role/status-specific fields), not as a speculative guess ahead of time.
 
 ## Definition of done for any task
 

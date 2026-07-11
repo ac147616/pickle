@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { pickleMonorepoSchema } from '@pickle/types';
+import { UserRoleSchema } from '@pickle/types';
 
 import Home from '../page';
 
@@ -7,7 +7,7 @@ import Home from '../page';
 // workspace package through the same Jest/TS config.
 describe('workspace wiring', () => {
   it('resolves @pickle/types', () => {
-    expect(pickleMonorepoSchema.parse({ scaffolded: true }).scaffolded).toBe(true);
+    expect(UserRoleSchema.parse('SHIPPER')).toBe('SHIPPER');
   });
 
   it('renders the home page', () => {
