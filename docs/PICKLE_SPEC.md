@@ -19,6 +19,10 @@ solo operators get both in one signup), **Admin** (web dashboard).
 - Business shipper onboarding: NZBN lookup (MBIE API) verifies the entity.
 - Individual shipper onboarding (lighter lane): verified NZ mobile (OTP) + ID document
   + card on file. Do not force business-grade signup on someone shipping one couch.
+  **Phone OTP is not yet implemented** — 0.3 ships email-only auth (Expo Go can't run
+  the native Firebase modules phone OTP needs); native OTP lands in BUILD_PLAN.md's
+  milestone 1.0, before onboarding (1.1) is built. Don't let this requirement get
+  dropped when building the individual lane.
 - Cargo entry for individuals uses **friendly presets** ("furniture item (large)",
   "a few boxes", "appliance") that map to default dimensions/weight behind the scenes.
   Structured data is still captured; photos are mandatory and carry extra weight.
@@ -38,7 +42,8 @@ carrier's liability insurance; Stripe Connect onboarding performs KYC + bank ver
 unverified carriers are invisible to search. Manual review is deliberate at launch
 (low volume; also a marketing point: "every carrier is personally vetted").
 Documents have `expires_at`; a scheduled job suspends carriers with lapsed insurance
-or licences.
+or licences. Drivers also verify identity via NZ mobile OTP (same requirement and same
+pending status as individual shippers above — see §2's note and BUILD_PLAN.md's 1.0).
 
 ## 4. Core flows
 

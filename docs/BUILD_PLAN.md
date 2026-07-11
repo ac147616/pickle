@@ -18,6 +18,11 @@ with the previous one broken.
     imported by api, mobile, and admin.
 
 ## Phase 1 — Marketplace core
+1.0 Mobile: switch from Expo Go to expo-dev-client + EAS build profiles (dev/preview).
+    Implement native NZ phone OTP via @react-native-firebase, replacing the
+    email-only Firebase JS SDK auth stubbed in 0.3 (phone OTP was deferred there
+    because it needs native modules Expo Go can't run). Prerequisite for 1.1 below:
+    both individual shippers and drivers verify via NZ mobile OTP.
 1.1 Organisations & onboarding: business lane (NZBN lookup) and individual lane
     (ID doc upload). Verification_documents upload to GCS via signed URLs.
 1.2 Admin dashboard v1: login (admin role + 2FA), verification queue with document
