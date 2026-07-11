@@ -1,5 +1,7 @@
 # Pickle
 
+[![CI](https://github.com/ac147616/pickle/actions/workflows/ci.yml/badge.svg)](https://github.com/ac147616/pickle/actions/workflows/ci.yml)
+
 NZ freight marketplace. See `docs/PICKLE_SPEC.md` for the product/technical spec,
 `docs/BUILD_PLAN.md` for the phased build plan, and `CLAUDE.md` for architecture
 invariants.

@@ -7,7 +7,9 @@ node_modules/
 .expo/
 dist/
 web-build/
-expo-env.d.ts
+# expo-env.d.ts is intentionally NOT ignored (see below) - its content is
+# static per Expo SDK major version, not machine-specific, and CI has no
+# step that would regenerate it (that normally happens via `expo start`).
 
 # Native
 .kotlin/
