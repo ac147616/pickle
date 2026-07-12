@@ -7,14 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # apps/api's postinstall runs `prisma generate`, which loads
-      # prisma.config.ts - its DIRECT_URL uses prisma/config's env() helper,
-      # which throws if the var is merely unset (doesn't need to be a real,
-      # reachable database - generate never connects). No Postgres in this
-      # job at all; see the e2e job for real DB values.
-      DATABASE_URL: postgresql://unused:unused@localhost:5432/unused
-      DIRECT_URL: postgresql://unused:unused@localhost:5432/unused
     steps:
       - uses: actions/checkout@v4
 
