@@ -5,7 +5,7 @@ import {
   signOut as firebaseSignOut,
   updateProfile,
   User,
-} from 'firebase/auth';
+} from '@react-native-firebase/auth';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { auth } from '@/lib/firebase';
