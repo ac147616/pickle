@@ -10,8 +10,10 @@ invariants.
 
 - Node.js 22+
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Postgres + Redis)
-- Expo Go on your phone, on the **same WiFi network** as your dev machine (App Store /
-  Play Store) — for testing the mobile app on a real device instead of a simulator
+- A dev-client build of the mobile app installed on your phone, on the **same WiFi
+  network** as your dev machine — see "Mobile" below. The app uses
+  `@react-native-firebase`, which needs native modules Expo Go can't run, so plain
+  Expo Go no longer works for this project (as of milestone 1.0).
 
 ## First-time setup
 
@@ -59,21 +61,39 @@ automatically — no real Firebase credentials involved.
 
 **4. Mobile**
 
+First time only (or after a native dependency changes, e.g. adding/upgrading a
+`@react-native-firebase/*` package): build and install a dev-client on your phone.
+This talks to EAS Build's free tier, so it takes a few minutes.
+
 ```bash
 cd apps/mobile
-npm run start
+npx eas login          # once per machine
+npm run build:dev      # builds an APK, prints a download/QR link when done
 ```
 
-Scan the QR code with Expo Go on your phone. The app auto-detects your dev machine's
-LAN IP from the Metro dev server's own address (`src/lib/dev-host.ts`) and uses it for
-both the API (`:3000`) and the Firebase emulator (`:9099`) — you shouldn't need to type
-in an IP address manually.
+Download the APK link on your Android phone and sideload it (allow "install unknown
+apps" for your browser if prompted). You only need to redo this when a *native* module
+changes — everyday JS/TS changes hot-reload without a rebuild.
 
-Sign up with any email/password on the phone; the API auto-provisions a matching
+Then, for day-to-day development:
+
+```bash
+cd apps/mobile
+npm run start:dev-client
+```
+
+The dev-client app on your phone connects to this Metro server — either it auto-detects
+it on the same WiFi, or open the app and enter `exp://<your-LAN-IP>:8081` manually. The
+app itself auto-detects your dev machine's LAN IP from the Metro dev server's own
+address (`src/lib/dev-host.ts`) for both the API (`:3000`) and the Firebase emulator
+(`:9099`) — you shouldn't need to type in an IP address manually for those.
+
+Sign up with any email/password, or "Sign in with phone instead" with any NZ mobile
+number — the Auth emulator generates a verification code instead of sending a real SMS
+(fetch it from `http://localhost:9099/emulator/v1/projects/demo-pickle/verificationCodes`
+if you're not near the Emulator UI). Either way, the API auto-provisions a matching
 `users` row (role `SHIPPER`) on first sign-in. The home screen calls `GET /me` and shows
-the result, proving the phone → Expo Go → API → Postgres round trip actually works.
-Phone-number sign-in is a "coming soon" stub for now — see `docs/BUILD_PLAN.md`
-milestone 1.0.
+the result, proving the phone → dev-client → API → Postgres round trip actually works.
 
 ### If your phone can't reach the API or emulator
 
