@@ -31,6 +31,25 @@ services:
       timeout: 5s
       retries: 10
 
+  # Local GCS emulator (CLAUDE.md requires private-bucket + signed-URL file
+  # storage; no real GCP project exists yet). apps/api's StorageService talks
+  # to it via GCS_EMULATOR_HOST and creates the bucket itself on boot - see
+  # apps/api/src/storage. fake-gcs-server strictly matches incoming
+  # requests' Host header against -public-host, and that host gets baked
+  # into every signed URL it issues - so GCS_PUBLIC_HOST here must equal
+  # apps/api/.env's GCS_EMULATOR_HOST. Default (localhost) is fine for
+  # API-only dev; testing from a physical phone needs both set to this
+  # machine's LAN IP, same override pattern as EXPO_PUBLIC_DEV_HOST.
+  gcs:
+    image: fsouza/fake-gcs-server:latest
+    restart: unless-stopped
+    command: ['-scheme', 'http', '-port', '4443', '-public-host', '${GCS_PUBLIC_HOST:-localhost:4443}']
+    ports:
+      - '${GCS_PORT:-4443}:4443'
+    volumes:
+      - pickle_gcs_data:/data
+
 volumes:
   pickle_postgres_data:
   pickle_redis_data:
+  pickle_gcs_data:

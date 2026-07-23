@@ -43,11 +43,23 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
+      # GH Actions service containers don't support docker-compose's
+      # `command:` override - fake-gcs-server also reads its CLI flags as
+      # env vars (FAKE_GCS_*), which this block does support.
+      gcs:
+        image: fsouza/fake-gcs-server:latest
+        env:
+          FAKE_GCS_SCHEME: http
+          FAKE_GCS_PUBLIC_HOST: localhost:4443
+        ports:
+          - 4443:4443
     env:
       DATABASE_URL: postgresql://pickle_app:pickle_app_ci_password@localhost:5432/pickle
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/pickle
       FIREBASE_AUTH_EMULATOR_HOST: localhost:9099
       FIREBASE_PROJECT_ID: demo-pickle
+      GCS_EMULATOR_HOST: localhost:4443
+      GCS_BUCKET: pickle-verification-docs
     steps:
       - uses: actions/checkout@v4
 
