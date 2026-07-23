@@ -40,11 +40,14 @@ export class StorageService implements OnModuleInit {
           // against the emulator (which never verifies the signature) - it
           // needs a syntactically real key or it falls through to an
           // application-default-credentials lookup that fails outside GCP.
-          // A fresh throwaway keypair per boot is fine since nothing ever
-          // checks it against a real identity.
+          // Nothing ever checks this against a real identity, so one
+          // process-wide throwaway keypair is fine - RSA-2048 generation is
+          // expensive enough that regenerating it per instance caused e2e
+          // test timeouts under Jest's parallel workers (multiple
+          // StorageService bootstraps competing for CPU at once).
           credentials: {
             client_email: 'emulator@demo-pickle.iam.gserviceaccount.com',
-            private_key: generateEmulatorSigningKey(),
+            private_key: getEmulatorSigningKey(),
           },
         })
       : new Storage();
@@ -82,11 +85,16 @@ export class StorageService implements OnModuleInit {
   }
 }
 
-function generateEmulatorSigningKey(): string {
-  const { privateKey } = generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-    publicKeyEncoding: { type: 'spki', format: 'pem' },
-  });
-  return privateKey;
+let cachedEmulatorSigningKey: string | undefined;
+
+function getEmulatorSigningKey(): string {
+  if (!cachedEmulatorSigningKey) {
+    const { privateKey } = generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+    });
+    cachedEmulatorSigningKey = privateKey;
+  }
+  return cachedEmulatorSigningKey;
 }

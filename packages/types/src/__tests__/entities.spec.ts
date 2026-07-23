@@ -366,9 +366,11 @@ describe('entity schemas parse a representative valid object', () => {
       MeResponseSchema.parse({
         id,
         email: 'a@example.com',
+        phone: null,
         fullName: 'Aroha Ngata',
         role: 'SHIPPER',
         status: 'ACTIVE',
+        needsOnboarding: true,
       }),
     ).not.toThrow();
   });

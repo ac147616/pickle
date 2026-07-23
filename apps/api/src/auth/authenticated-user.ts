@@ -7,6 +7,7 @@ export interface AuthenticatedUser {
   id: string;
   firebaseUid: string;
   email: string | null;
+  phone: string | null;
   fullName: string;
   role: UserRole;
   status: UserStatus;

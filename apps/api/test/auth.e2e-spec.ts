@@ -64,6 +64,7 @@ describe('Auth (e2e)', () => {
       email,
       role: 'SHIPPER',
       status: 'ACTIVE',
+      needsOnboarding: true,
     });
   });
 

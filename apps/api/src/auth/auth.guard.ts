@@ -37,11 +37,13 @@ export class AuthGuard implements CanActivate {
 
     let firebaseUid: string;
     let email: string | null;
+    let phone: string | null;
     let displayName: string | null;
     try {
       const decoded = await getAuth(this.firebaseApp).verifyIdToken(token);
       firebaseUid = decoded.uid;
       email = decoded.email ?? null;
+      phone = decoded.phone_number ?? null;
       displayName = (decoded.name as string | undefined) ?? null;
     } catch {
       throw new UnauthorizedException({
@@ -53,6 +55,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.loadOrProvisionUser(
       firebaseUid,
       email,
+      phone,
       displayName,
     );
 
@@ -70,6 +73,7 @@ export class AuthGuard implements CanActivate {
   private async loadOrProvisionUser(
     firebaseUid: string,
     email: string | null,
+    phone: string | null,
     displayName: string | null,
   ): Promise<AuthenticatedUser> {
     const existing = await this.prisma.user.findUnique({
@@ -84,6 +88,7 @@ export class AuthGuard implements CanActivate {
       data: {
         firebaseUid,
         email,
+        phone,
         fullName,
         role: UserRole.SHIPPER,
       },

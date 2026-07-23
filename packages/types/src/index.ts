@@ -12,3 +12,6 @@ export * from './entities/ratings';
 export * from './entities/messaging';
 
 export * from './dto/me';
+export * from './dto/nzbn';
+export * from './dto/organisations';
+export * from './dto/verification-documents';
