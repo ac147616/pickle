@@ -31,6 +31,13 @@
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pickle needs access to your photos to upload identity documents.",
+          "cameraPermission": "Pickle needs access to your camera to photograph identity documents."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",

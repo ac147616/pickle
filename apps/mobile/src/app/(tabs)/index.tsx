@@ -1,5 +1,3 @@
-import { MeResponse } from '@pickle/types';
-import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,20 +5,13 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
+import { useMe } from '@/contexts/me-context';
 import { useTheme } from '@/hooks/use-theme';
-import { apiFetch } from '@/lib/api';
 
 export default function HomeScreen() {
   const theme = useTheme();
   const { user, signOut } = useAuth();
-  const [me, setMe] = useState<MeResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    apiFetch<MeResponse>('/me')
-      .then(setMe)
-      .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Failed to load /me'));
-  }, []);
+  const { me } = useMe();
 
   return (
     <ThemedView style={styles.container}>
@@ -34,8 +25,7 @@ export default function HomeScreen() {
 
         <ThemedView type="backgroundElement" style={styles.card}>
           <ThemedText type="smallBold">API session (GET /me)</ThemedText>
-          {error && <ThemedText themeColor="textSecondary">{error}</ThemedText>}
-          {!error && !me && <ThemedText themeColor="textSecondary">Loading…</ThemedText>}
+          {!me && <ThemedText themeColor="textSecondary">Loading…</ThemedText>}
           {me && (
             <>
               <ThemedText themeColor="textSecondary">email: {me.email}</ThemedText>

@@ -5,15 +5,17 @@ import { ActivityIndicator, useColorScheme } from 'react-native';
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { ThemedView } from '@/components/themed-view';
 import { AuthProvider, useAuth } from '@/contexts/auth-context';
+import { MeProvider, useMe } from '@/contexts/me-context';
 import { useTheme } from '@/hooks/use-theme';
 
 SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { me, loading: meLoading } = useMe();
   const theme = useTheme();
 
-  if (loading) {
+  if (authLoading || (!!user && meLoading)) {
     return (
       <ThemedView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator color={theme.text} />
@@ -23,8 +25,11 @@ function RootNavigator() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!user}>
+      <Stack.Protected guard={!!user && !!me && !me.needsOnboarding}>
         <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!user && !!me && me.needsOnboarding}>
+        <Stack.Screen name="(onboarding)" />
       </Stack.Protected>
       <Stack.Protected guard={!user}>
         <Stack.Screen name="(auth)" />
@@ -38,8 +43,10 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <AnimatedSplashOverlay />
-        <RootNavigator />
+        <MeProvider>
+          <AnimatedSplashOverlay />
+          <RootNavigator />
+        </MeProvider>
       </AuthProvider>
     </ThemeProvider>
   );
